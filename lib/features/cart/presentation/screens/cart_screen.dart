@@ -24,7 +24,10 @@ class CartScreen extends ConsumerWidget {
                 child: ListView.builder(
                   itemCount: items.length,
                   itemBuilder: (ctx, i) => Card(
-                    margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     child: Stack(
                       children: [
                         Padding(
@@ -49,11 +52,20 @@ class CartScreen extends ConsumerWidget {
                                     child: Row(
                                       children: [
                                         IconButton(
-                                          icon: const Icon(Icons.remove_circle_outline, size: 20),
+                                          icon: const Icon(
+                                            Icons.remove_circle_outline,
+                                            size: 20,
+                                          ),
                                           onPressed: items[i].quantity > 1
                                               ? () => ref
-                                                  .read(cartNotifierProvider.notifier)
-                                                  .updateQuantity(items[i].id, items[i].quantity - 1)
+                                                    .read(
+                                                      cartNotifierProvider
+                                                          .notifier,
+                                                    )
+                                                    .updateQuantity(
+                                                      items[i].id,
+                                                      items[i].quantity - 1,
+                                                    )
                                               : null,
                                         ),
                                         Text(
@@ -64,10 +76,18 @@ class CartScreen extends ConsumerWidget {
                                           ),
                                         ),
                                         IconButton(
-                                          icon: const Icon(Icons.add_circle_outline, size: 20),
+                                          icon: const Icon(
+                                            Icons.add_circle_outline,
+                                            size: 20,
+                                          ),
                                           onPressed: () => ref
-                                              .read(cartNotifierProvider.notifier)
-                                              .updateQuantity(items[i].id, items[i].quantity + 1),
+                                              .read(
+                                                cartNotifierProvider.notifier,
+                                              )
+                                              .updateQuantity(
+                                                items[i].id,
+                                                items[i].quantity + 1,
+                                              ),
                                         ),
                                       ],
                                     ),
@@ -81,7 +101,9 @@ class CartScreen extends ConsumerWidget {
                                       color: Colors.blueAccent,
                                     ),
                                   ),
-                                  const SizedBox(width: 30), // Space for delete icon
+                                  const SizedBox(
+                                    width: 30,
+                                  ), // Space for delete icon
                                 ],
                               ),
                               const SizedBox(height: 12),
@@ -98,10 +120,25 @@ class CartScreen extends ConsumerWidget {
                           ),
                         ),
                         Positioned(
-                          top: 4,
-                          right: 4,
+                          top: -4,
+                          right: -4,
                           child: IconButton(
-                            icon: const Icon(Icons.close, color: Colors.red, size: 20),
+                            style: IconButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              backgroundColor: Colors.red,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.elliptical(10, 12),
+                                  topRight: Radius.elliptical(10, 12),
+                                ),
+                                side: BorderSide(color: Colors.red),
+                              ),
+                            ),
+                            icon: const Icon(
+                              Icons.close,
+                              color: Colors.white,
+                              size: 20,
+                            ),
                             onPressed: () => ref
                                 .read(cartNotifierProvider.notifier)
                                 .deleteItem(items[i].id),
@@ -128,7 +165,9 @@ class CartScreen extends ConsumerWidget {
                           ref.read(cartNotifierProvider.notifier).clearCart();
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (_) => const SuccessScreen()),
+                            MaterialPageRoute(
+                              builder: (_) => const SuccessScreen(),
+                            ),
                           );
                         },
                         child: const Text('Checkout'),

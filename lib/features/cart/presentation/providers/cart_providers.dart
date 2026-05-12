@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/database/isar_service.dart';
 import '../../data/models/cart_item.dart';
@@ -8,36 +9,34 @@ final cartItemsProvider = StreamProvider<List<CartItem>>((ref) {
   return ref.watch(isarServiceProvider).watchCartItems();
 });
 
-class CartNotifier extends StateNotifier<AsyncValue<void>> {
-  final IsarService _isarService;
-
-  CartNotifier(this._isarService) : super(const AsyncValue.data(null));
+class CartNotifier extends AsyncNotifier<void> {
+  @override
+  FutureOr<void> build() {
+    return null;
+  }
 
   Future<void> addItem(CartItem item) async {
-    state = const AsyncValue.loading();
-    try {
-      await _isarService.addToCart(item);
-      state = const AsyncValue.data(null);
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-    }
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      await ref.read(isarServiceProvider).addToCart(item);
+    });
   }
 
   Future<void> updateQuantity(int id, int quantity) async {
-    await _isarService.updateQuantity(id, quantity);
+    await ref.read(isarServiceProvider).updateQuantity(id, quantity);
   }
 
   Future<void> deleteItem(int id) async {
-    await _isarService.deleteCartItem(id);
+    await ref.read(isarServiceProvider).deleteCartItem(id);
   }
 
   Future<void> clearCart() async {
-    await _isarService.clearCart();
+    await ref.read(isarServiceProvider).clearCart();
   }
 }
 
-final cartNotifierProvider = StateNotifierProvider<CartNotifier, AsyncValue<void>>((ref) {
-  return CartNotifier(ref.watch(isarServiceProvider));
+final cartNotifierProvider = AsyncNotifierProvider<CartNotifier, void>(() {
+  return CartNotifier();
 });
 
 final cartTotalProvider = Provider<double>((ref) {
